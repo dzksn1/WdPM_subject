@@ -1,0 +1,15 @@
+package op_code;
+parameter OP_ADD = 4'b0000;
+parameter OP_SUB = 4'b0001;
+parameter OP_MUL_BIT = 4'b0010;
+parameter OP_OR_BIT = 4'b0011;
+parameter OP_XOR_BIT = 4'b0100;
+parameter OP_NOT = 4'b0101;
+parameter OP_NOP = 4'b0110;
+parameter OP_STM = 4'b1000;
+parameter OP_ST = 4'b1010;
+parameter OP_LDM = 4'b1100;
+parameter OP_LD = 4'b1110;
+xd
+endpackage
+
