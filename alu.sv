@@ -4,7 +4,7 @@ module alu (
   input i_clk, i_rst,
   input i_acumulator_ce,
   input [2:0] i_operation_code,
-  input [7:0] i_register_file,
+  input [7:0] i_register_file, //wej diagnostyczne
   input [2:0] i_register_file_ce,
   input [1:0] i_register_file_mux_addr,
   input i_data_memory_read_enable,
@@ -65,24 +65,28 @@ end : p_acumulator
 //------------------------------------
 always_ff @(posedge i_clk or posedge i_rst) begin : p_register_file_ce
   if(i_rst) begin
+    /*
     for(integer i = 0; i < 3; i++) begin
       register_file_index[i] <= '0;
     end
-    //register_file_index <= '{default:0};
+    */
+    register_file_index <= '{default:0};
   end
   else begin
     case (i_register_file_ce)
-    //3'b000 : register_file_index[0] <= i_register_file; //temporary input
+    3'b000 : register_file_index[0] <= o_acumulator;
     3'b001 : register_file_index[1] <= o_acumulator;
     3'b010 : register_file_index[2] <= o_acumulator;
     3'b011 : register_file_index[3] <= o_acumulator;
     endcase
   end
 end : p_register_file_ce
-
+//------------------------------------
+// Register File - register choose
+//------------------------------------
 always_comb begin : p_register_file_mux_addr
   case (i_register_file_mux_addr)
-  2'b00 : o_register_file = i_register_file; // Temporary input
+  2'b00 : o_register_file = register_file_index[0]; // Temporary input
   2'b01 : o_register_file = register_file_index[1];
   2'b10 : o_register_file = register_file_index[2];
   2'b11 : o_register_file = register_file_index[3];
