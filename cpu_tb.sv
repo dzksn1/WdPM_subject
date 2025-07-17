@@ -35,22 +35,10 @@ end
 
 initial begin
   i_rst = 1'b1; i_register_file = 8'd0;
-  i = 0;
+  i = 0; i_ce = 1'b1;
   @(negedge i_clk);
-  i_ce = 1'b1; i_rst = 1'b0;
+  i_rst = 1'b0;
   i_register_file = 8'd2;
-  repeat(3) begin
-    @(posedge i_clk);
-    i_register_file += 9;
-  end
-  /*
-  @(posedge i_clk);
-  i_register_file = 8'b1111_1110;
-  @(posedge i_clk);
-  i_register_file = 8'b0000_0010;
-  @(posedge i_clk);
-  @(posedge i_clk);
-  */
   #100
   $finish;
 end

@@ -26,41 +26,34 @@ end : p_program_counter
 // Program Memory
 //---------------------------------
 always_comb begin : p_program_memory
-  if (i_rst) begin
-    /* // Pierwszy set instrukcji do testow
-  o_program_memory = {10'b00_0000_0000, OP_NOP, 2'b00};
-  //program_memory = '{default:0};
-  program_memory[0] = {10'b00_0000_0000, OP_NOP, 2'b00};
-  program_memory[1] = {10'b00_0000_0000, OP_LD, 2'b00};
-  program_memory[2] = {10'b00_0000_0000, OP_ST, 2'b01};
-  program_memory[3] = {10'b00_0000_0000, OP_NOP, 2'b00};
-  program_memory[4] = {10'b00_0000_0001, OP_STM, 2'b00};
-  program_memory[5] = {10'b00_0000_0000, OP_LD, 2'b00};
-  program_memory[6] = {10'b00_0000_0000, OP_NOP, 2'b00};
-  program_memory[7] = {10'b00_0000_0001, OP_LDM, 2'b00};
-  program_memory[8] = {10'b00_0000_0000, OP_NOP, 2'b00};
-  */
-  //o_program_memory = {10'b00_0000_0000, OP_NOP, 2'b00};
-  program_memory[0] = {10'b00_0000_0000, OP_NOP, 2'b11};
-  program_memory[1] = {8'b1111_1110, 2'b10, OP_LD, 2'b11}; //direct LD
-  program_memory[2] = {10'b00_0000_0000, OP_ST, 2'b11}; // ST to RF
-  program_memory[3] = {8'd1, 2'b10, OP_LD, 2'b11}; //direct LD
-  program_memory[4] = {10'b00_0000_0000, OP_ADD, 2'b11}; //basic LD operation
-  program_memory[5] = {10'b00_0000_0000, OP_LD, 2'b11};
+  if(i_rst) begin
+    o_program_memory = {10'b00_0000_0000, OP_NOP, 2'b00};
+    for (int i = 0; i < 31; i++) begin
+      program_memory[i] = {10'b00_0000_0000, OP_NOP, 2'b00};
+    end 
+  // Program:
+  program_memory[0] = {8'b1111_1110, DIRECT_LD, OP_LD, 2'b00}; //direct LD
+  program_memory[1] = {10'b00_0000_0000, OP_ST, 2'b00}; // ST to RF 00
+  program_memory[2] = {8'd1, DIRECT_LD, OP_LD, 2'b00}; //direct LD
+  program_memory[3] = {10'b00_0000_0000, OP_ADD, 2'b00}; //ADD operation
+  program_memory[4] = {10'd0, OP_ST, 2'b01}; // ST to RF 01
+  program_memory[5] = {10'b00_0000_0000, OP_XOR_BIT, 2'b00}; //XOR operation
+  program_memory[6] = {10'd10, OP_STM, 2'b00}; //ST to data mem
+  program_memory[7] = {10'd0, OP_NOP, 2'b00}; // NOP
   end
   else begin
     o_program_memory = program_memory[o_pc_addr];
   end
 end : p_program_memory
 assign o_operation_code_2_id = full_operation'(o_program_memory[5:2]);
-// przekazanie instrukcji
+// instruction pass
 
 //-----------------
-// Format instrukcji:
-// Zwyczajna instrukcja:
-// program_memory[] = {10'b adres data mem, operacja z prefixem OP, 2'b adres RF};
+// Instruction format:
+// Basic instruction:
+// program_memory[] = {10'b addr data mem, operation with prefix OP, 2'b addr RF};
 
-// Instrukcja LD wykorzystujaca wpis bezposredni
-// program_memory[] = {8'b dane, DIRECT_LD, OP_LD, 2'b adres RF};
+// LD instruction with Direct Load
+// program_memory[] = {8'b data, DIRECT_LD, OP_LD, 2'b addr RF};
 //-----------------
 endmodule 

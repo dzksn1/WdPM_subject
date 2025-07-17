@@ -6,16 +6,14 @@ module data_memory (
   input i_read_enable,
   output logic [7:0] o_data_memory
 );
-logic [7:0] data_memory [1023:0]; //mozna dac [1024] tak o
+logic [7:0] data_memory [1023:0]; // 1kB memory
 //---------------------------------
 // Data memory
 //---------------------------------
 always_ff @(posedge i_clk or posedge i_rst) begin : p_data_memory
   if(i_rst) begin
-    for(integer i = 0; i < 1023; i = i + 1) begin
-      data_memory[i] <= '0;
-    end
-    //data_memory <= '{default:0};
+    data_memory <= '{default:0};
+    o_data_memory <= '0;
   end
   else begin
     case ({i_write_enable,i_read_enable})

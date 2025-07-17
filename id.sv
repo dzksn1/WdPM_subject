@@ -33,6 +33,10 @@ o_direct_load = 1'b0;
 
 case(instruction)
   default : begin //Basic alu operations
+      o_acumulator_ce = 1'b1;
+      o_register_file_ce = {1'b1, i_instruction[1:0]}; //disable rf clocks
+  end
+  OP_NOP : begin
       o_acumulator_ce = 1'b0;
       o_register_file_ce = {1'b1, i_instruction[1:0]}; //disable rf clocks
   end
@@ -65,35 +69,3 @@ endmodule
 // [5:2] - operation code
 // [1:0] - rf addr
 //----------------------
-
-/*
-case(instruction[5])
-  1'b0 : begin // basic ALU operations, a3 = 0
-    if ((instruction[4:2] >= 3'b000) || (instruction[4:2] <= 3'b101)) begin
-      o_acumulator_ce = 1'b0;
-      o_register_file_ce = {1'b1, instruction[1:0]}; //disable rf clocks
-    end
-  end
-  1'b1 : begin // a3 = 1
-    case(instruction[4])
-      1'b0 : begin //a3a2 = 10, All STOTRE operations are here
-        if (instruction[3] == 1'b0) begin // a3a2a1a0 = 100-, STM -> ST to data_mem from aku
-          o_memory_write_enable = 1'b1;
-        end
-        else if (instruction[3] == 1'b1) begin // a3a2a1a0 = 101-, ST from acumulator
-          o_register_file_ce = {1'b0, instruction[1:0]}; //Enable RF
-        end
-      end
-      1'b1 : begin //a3a2 = 11 -> LD'M (Load to aku from data memory) or LD to acumulator
-        if(instruction[3] == 1'b0) begin //LD to aku from data_mem
-          o_acumulator_ce = 1'b1;
-          o_memory_read_enable = 1'b1;
-        end
-        else if(instruction[3] == 1'b1) begin //LD to acumulator
-          o_acumulator_ce = 1'b1;
-        end
-      end
-    endcase
-  end
-endcase
-*/
